@@ -45,7 +45,7 @@ Notice: There are a lot of false detections when we are not ignoring shadows. Im
 ```
 Notice: There are better detections when ignoring shadows. Image below.
 ```
-![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img2.png)
+![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img3.png)
 
 ### TODO
  1. Add vertical borders for horizontal line.
