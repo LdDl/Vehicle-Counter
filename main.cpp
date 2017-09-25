@@ -10,8 +10,8 @@ atomic<bool> grabbing;
 atomic<bool> processing;
 Mat fgMaskMOG2;
 Mat fgMaskKNN;
-Ptr<BackgroundSubtractorMOG2> pMOG2 = createBackgroundSubtractorMOG2(500, 36.0, false);
-Ptr<BackgroundSubtractor> pKNN = createBackgroundSubtractorKNN();
+Ptr<BackgroundSubtractorMOG2> pMOG2 = createBackgroundSubtractorMOG2(500, 36.0, true);
+Ptr<BackgroundSubtractor> pKNN = createBackgroundSubtractorKNN(500, 36.0, true);
 bool blnFirstFrame = true;
 int carCounter = 0;
 
@@ -24,6 +24,8 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
 void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParameters &mp);
 
 int main(int argc, char* argv[]) {
+//    pMOG2->setNMixtures(3);
+//    pMOG2->setDetectShadows(false);
     InitialParameters mainParameters;
     if (argc > 1) {
         cout << "Using configuration file: " << argv[1] << endl;
@@ -170,6 +172,7 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
     pKNN->apply(frame, fgMaskKNN);
     erode(fgMaskKNN, foreground, cv::Mat());
     dilate(foreground, foreground, cv::Mat());
+    foreground.setTo(0, foreground == 127); // Ignore shadow!
     std::vector<std::vector<cv::Point> > contours;
     findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     drawContours(frame, contours, -1, cv::Scalar(0,0,255), 2);
@@ -229,6 +232,7 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
     pMOG2->apply(frame, fgMaskMOG2);
     erode(fgMaskMOG2, foreground, Mat());
     dilate(foreground, foreground, Mat());
+    foreground.setTo(0, foreground == 127); // Ignore shadow!
     std::vector<PointsVector> contours;
     findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     drawContours(frame, contours, -1, Scalar(0,0,255), 2);
