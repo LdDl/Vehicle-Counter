@@ -44,8 +44,10 @@ Notice: There are a lot of false detections when we are not ignoring shadows. Im
 ![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img1.png)
 ```
 Notice: There are better detections when ignoring shadows. Image below.
+Here we are setting all shadow pixels' values which are 127 to 0.
+foreground.setTo(0, foreground == 127);
 ```
-![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img2.png)
+![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img3.png)
 
 ### TODO
  1. Add vertical borders for horizontal line.
