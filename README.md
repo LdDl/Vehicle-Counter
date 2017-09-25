@@ -12,7 +12,7 @@ Grabbing and processing frames are separated into two threads (for improving per
 When you're done with prerequisites (included OpenCV and JSON parser), just build project with any tool you familiar.
 
 ### Usage
-You need to create configuration JSON-file with next fiels:
+You need to create configuration JSON-file with next fields:
 ```
 {
 	"video_filename": "your video file / rtsp link / webcam",
