@@ -1,0 +1,12 @@
+{
+	"video_filename": "CarsDrivingUnderBridge.mp4",
+	"detector_type": "fmog2",
+	"cascade_path": "-",
+	"line_position": {
+		"x": 0,
+		"y": 330
+	},
+	"line_length": 1280,
+	"scale_factor": 1,
+	"direction": false
+}
