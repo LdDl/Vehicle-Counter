@@ -38,8 +38,14 @@ Then you can start program executing command:
 ./main init_pars.json
 ```
 Example for MOG2:
-![alt text](https://raw.githubusercontent.com/LdDl/vcounter/master/result/img1.png)
-
+```
+Notice: There are a lot of false detections when we are not ignoring shadows.
+```
+![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img1.png)
+```
+Notice: There are better detections when ignoring shadows.
+```
+![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img2.png)
 ### TODO
  1. Add vertical borders for horizontal line.
  2. Better blobs drawing.
