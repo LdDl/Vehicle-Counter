@@ -1,8 +1,8 @@
 #include <iostream>
-#include "blobie.hpp"
+#include "headers/blobie.hpp"
 
-#include "fifo_buffer.hpp"
-#include "framedata.hpp"
+#include "headers/fifo_buffer.hpp"
+#include "headers/framedata.hpp"
 
 //Global variables
 FiFoBuffer<FrameData> buff(60);
@@ -24,8 +24,6 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
 void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParameters &mp);
 
 int main(int argc, char* argv[]) {
-//    pMOG2->setNMixtures(3);
-//    pMOG2->setDetectShadows(false);
     InitialParameters mainParameters;
     if (argc > 1) {
         cout << "Using configuration file: " << argv[1] << endl;

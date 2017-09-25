@@ -1,2 +1,5 @@
 *.log
+vcounter.pro
+vcounter.pro.user
 /headers/json.hpp
+/build-vcounter-Desktop_Qt_5_9_1_MSVC2017_64bit-Release

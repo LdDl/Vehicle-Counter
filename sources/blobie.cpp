@@ -1,4 +1,4 @@
-#include "blobie.hpp"
+#include "headers/blobie.hpp"
 
 blobie::blobie(const PointsVector &_contour) {
     currentContour = _contour;

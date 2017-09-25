@@ -16,7 +16,7 @@ class blobie {
         bool isStillBeingTracked;
         int intNumOfConsecutiveFramesWithoutAMatch;
         Point predictedNextPosition;
-        bool isCrossedTheLine(int &intHorizontalLinePosition, int &carCount);
+        bool isCrossedTheLine(int &intHorizontalLinePosition, int &carCount, bool &direction);
         void drawTrack(Mat &src, string id);
         blobie(const PointsVector &_contour);
         blobie(const Rect &_contour);
