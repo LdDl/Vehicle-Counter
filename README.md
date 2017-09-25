@@ -4,9 +4,9 @@ This project is targeted for counting vehicles by different approaches (HaarCasc
 Grabbing and processing frames are separated into two threads (for improving perfomance, I hope...)
 
 ### Prerequisites
-1) First of all you need installed OpenCV (https://github.com/opencv/opencv) for your platform. I've tested this project with version 3.3.0, don't know how it works with version <3.3.0.
+1) First of all you need installed OpenCV (https://github.com/opencv/opencv) for your platform. I've tested this project with version 3.3.0 (don't know how it works with version <3.3.0).
 
-2) Also you need JSON parser for setting up initial parameters (such as "name of cascade", "scale factor of image" and etc.). I'm prefer this one https://github.com/nlohmann/json, because it is simple for usage (https://github.com/nlohmann/json#integration)
+2) Also you need JSON parser for setting up initial parameters (such as "name of cascade", "scale factor of image" and etc.). I prefer this one https://github.com/nlohmann/json, because it is simple for usage (https://github.com/nlohmann/json#integration)
 
 ### Installing
 When you're done with prerequisites (included OpenCV and JSON parser), just build project with any tool you familiar.
