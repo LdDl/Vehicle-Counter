@@ -150,6 +150,7 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
                 int rheight = blob.currentBoundingRect.height * mp.scale_factor;
                 Rect objectCrop(rx, ry, rwidth, rheight);
                 imshow("plate for id: " + to_string(&blob - &blobies[0]), fdata.image_truesize(objectCrop));
+                line(imgCopy, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 3);
             }
             blob.drawTrack(imgCopy, to_string(&blob - &blobies[0]));
         }
@@ -207,7 +208,8 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
             cout << "crossed" << endl;
             line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 3);
         } else {
-      }
+            line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 0, 255), 3);
+        }
       blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
 
@@ -265,6 +267,7 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
             cout << "crossed" << endl;
             line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 3);
         } else {
+            line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 0, 255), 3);
         }
         blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
