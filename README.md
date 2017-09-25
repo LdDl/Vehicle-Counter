@@ -37,7 +37,7 @@ Then you can start program executing command:
 ```
 ./main init_pars.json
 ```
-Example for MOG2:
+Example for MOG2 (you can get example JSON and video-file from here: https://github.com/LdDl/Vehicle-Counter/tree/master/result):
 ```
 Notice: There are a lot of false detections when we are not ignoring shadows. Image below.
 ```
