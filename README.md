@@ -1,5 +1,5 @@
 # VCounter
-This project is targeted for counting vehicles via different approaches: HaarCascade, BackgroundSubstraction MOG2 and BackgroundSubstraction KNN.
+This project is targeted for counting vehicles by different approaches (HaarCascade, BackgroundSubstraction MOG2 and BackgroundSubstraction KNN) with OpenCV.
 
 Grabbing and processing frames are separated into two threads (for improving perfomance, I hope...)
 
@@ -37,6 +37,8 @@ Then you can start program executing command:
 ```
 ./main init_pars.json
 ```
+Example for MOG2:
+![alt text](https://raw.githubusercontent.com/LdDl/vcounter/master/result/img1.png)
 
 ### TODO
  1. Add vertical borders for horizontal line.
@@ -45,4 +47,4 @@ Then you can start program executing command:
  4. Test programm on several single board computers.
  
 ### P.S.
-I'm stil working on this. Will be glad to any ideas for improving the project.
+I'm stil working on this. Will be glad to read any ideas how to improve the project.
