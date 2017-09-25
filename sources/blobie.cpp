@@ -96,13 +96,20 @@ void matchCurrentFrameBlobsToExistingBlobs(vector<blobie> &existingBlobs, vector
     }
 }
 
-bool blobie::isCrossedTheLine(int &intHorizontalLinePosition, int &carCount) {
+bool blobie::isCrossedTheLine(int &intHorizontalLinePosition, int &carCount, bool &direction) {
     if (this->isStillBeingTracked == true && this->track.size() >=2) {
         int prevFrame = (int)this->track.size() - 2;
         int currFrame = (int)this->track.size() - 1;
-        if (this->track[prevFrame].y <= intHorizontalLinePosition && this->track[currFrame].y > intHorizontalLinePosition) {
-            carCount++;
-            return true;
+        if (direction == true) {
+            if (this->track[prevFrame].y <= intHorizontalLinePosition && this->track[currFrame].y > intHorizontalLinePosition) {
+                carCount++; // TO us
+                return true;
+            }
+        } else {
+            if (this->track[prevFrame].y > intHorizontalLinePosition && this->track[currFrame].y <= intHorizontalLinePosition) {
+                carCount++; // FROM us
+                return true;
+            }
         }
     }
     return false;
