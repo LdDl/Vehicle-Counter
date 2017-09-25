@@ -47,4 +47,4 @@ Example for MOG2:
  4. Test programm on several single board computers.
  
 ### P.S.
-I'm stil working on this. Will be glad to read any ideas for improving the project.
+I'm stil working on this. Will be glad to read any ideas how to improve the project.
