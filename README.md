@@ -1,4 +1,4 @@
-# vcounter
+# VCounter
 This project is targeted for counting vehicles via different approaches: HaarCascade, BackgroundSubstraction MOG2 and BackgroundSubstraction KNN.
 
 Grabbing and processing frames are separated into two threads (for improving perfomance, I hope...)
