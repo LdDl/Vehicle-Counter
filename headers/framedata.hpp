@@ -2,7 +2,7 @@
 #ifndef FRAMEDATA_HPP
 #define FRAMEDATA_HPP
 
-#include <opencv2/opencv.hpp>
+#include "utils.hpp"
 
 class FrameData {
 public:
@@ -15,8 +15,8 @@ public:
     };
 
     MyDataFlatMembers vars;
-    cv::Mat firstFrame;
-    cv::Mat image, image_truesize, depth, bgr;
+    Mat firstFrame;
+    Mat image, image_truesize, depth, bgr;
 
     FrameData &operator=(const FrameData &src){
         if (this == &src)

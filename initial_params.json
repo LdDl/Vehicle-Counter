@@ -1,0 +1,12 @@
+{
+	"video_filename": "1.mp4",
+	"detector_type": "haar_cascade",
+	"cascade_path": "haarcascade_russian_plate_number_truly_boosted.xml",
+	"line_position": {
+		"left_top_x": 0,
+		"left_top_y": 350
+	},
+	"line_length": 5000,
+	"scale_factor": 3,
+	"direction": true
+}
