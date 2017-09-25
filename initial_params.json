@@ -1,7 +1,7 @@
 {
 	"video_filename": "1.mp4",
 	"detector_type": "haar_cascade",
-	"cascade_path": "haarcascade_russian_plate_number_truly_boosted.xml",
+	"cascade_path": "cars_test.xml",
 	"line_position": {
 		"left_top_x": 0,
 		"left_top_y": 350
