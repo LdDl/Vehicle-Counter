@@ -37,6 +37,8 @@ Then you can start program executing command:
 ```
 ./main init_pars.json
 ```
+Example for MOG2:
+![alt text](https://raw.githubusercontent.com/LdDl/vcounter/master/result/img1.png)
 
 ### TODO
  1. Add vertical borders for horizontal line.
