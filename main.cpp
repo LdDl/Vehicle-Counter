@@ -10,7 +10,7 @@ atomic<bool> grabbing;
 atomic<bool> processing;
 Mat fgMaskMOG2;
 Mat fgMaskKNN;
-Ptr<BackgroundSubtractorMOG2> pMOG2 = createBackgroundSubtractorMOG2(500, 36.0, true);
+Ptr<BackgroundSubtractorMOG2> pMOG2 = createBackgroundSubtractorMOG2(500, 36.0, false);
 Ptr<BackgroundSubtractor> pKNN = createBackgroundSubtractorKNN();
 bool blnFirstFrame = true;
 int carCounter = 0;
@@ -208,6 +208,7 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
             line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 3);
         } else {
       }
+      blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
 
     blobies_currentFrame.clear();
@@ -264,7 +265,8 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
             cout << "crossed" << endl;
             line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 3);
         } else {
-      }
+        }
+        blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
 
     blobies_currentFrame.clear();
