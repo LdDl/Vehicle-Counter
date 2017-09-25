@@ -38,8 +38,8 @@ void InitialParameters::SetParams(const char *path) {
     ifs >> j;
     this->detector_type = j["detector_type"];
     this->videoSource = j["video_filename"];
-    this->crossingLine[0].x = j["line_position"]["left_top_x"];
-    this->crossingLine[0].y = j["line_position"]["left_top_y"];
+    this->crossingLine[0].x = j["line_position"]["x"];
+    this->crossingLine[0].y = j["line_position"]["y"];
     this->crossingLine[1].x = j["line_length"];
     this->crossingLine[1].x += this->crossingLine[0].x;
     this->crossingLine[1].y = this->crossingLine[0].y;

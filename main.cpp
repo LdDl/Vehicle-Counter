@@ -222,11 +222,11 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
     Mat foreground;
     Mat &frame = fdata.image;
     pMOG2->apply(frame, fgMaskMOG2);
-    cv::erode(fgMaskMOG2, foreground, cv::Mat());
-    cv::dilate(foreground, foreground, cv::Mat());
-    std::vector<std::vector<cv::Point> > contours;
-    cv::findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
-    cv::drawContours(frame, contours, -1, cv::Scalar(0,0,255), 2);
+    erode(fgMaskMOG2, foreground, Mat());
+    dilate(foreground, foreground, Mat());
+    std::vector<PointsVector> contours;
+    findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
+    drawContours(frame, contours, -1, Scalar(0,0,255), 2);
 
     medianBlur(fgMaskMOG2, fgMaskMOG2, 5);
     imshow("gauss blur", fgMaskMOG2);
