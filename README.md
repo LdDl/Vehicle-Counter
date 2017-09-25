@@ -39,18 +39,20 @@ Then you can start program executing command:
 ```
 Example for MOG2:
 ```
-Notice: There are a lot of false detections when we are not ignoring shadows.
+Notice: There are a lot of false detections when we are not ignoring shadows. Image below.
 ```
 ![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img1.png)
 ```
-Notice: There are better detections when ignoring shadows.
+Notice: There are better detections when ignoring shadows. Image below.
 ```
 ![alt text](https://raw.githubusercontent.com/LdDl/Vehicle-Counter/master/result/img2.png)
+
 ### TODO
  1. Add vertical borders for horizontal line.
  2. Better blobs drawing.
  3. Add some new detectors.
- 4. Test programm on several single board computers.
+ 4. Add shadows detector choice into JSON configuration.
+ 5. Test programm on several single board computers.
  
 ### P.S.
 I'm stil working on this. Will be glad to read any ideas how to improve the project.
