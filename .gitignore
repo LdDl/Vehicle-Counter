@@ -1,0 +1,2 @@
+*.log
+/headers/json.hpp
