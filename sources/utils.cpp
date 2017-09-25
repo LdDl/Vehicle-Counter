@@ -73,21 +73,11 @@ vector<Rect> detectRegionsOfInterest(Mat &frame, CascadeClassifier &cascade) {
     Mat frameClone = frame.clone();
     Mat gray_img;
     Mat eq_img;
-
-    //Size image_size(frame.cols, frame.rows);
     Size resized_image_size(frame.cols/1, frame.rows/1);
-
     resize(frameClone, frameClone, resized_image_size);
     cvtColor(frameClone, gray_img, CV_BGR2GRAY);
     equalizeHist(gray_img, eq_img);
     cascade.detectMultiScale(eq_img, plates, 1.18, 3, 0, Size(15, 15)); //scale 1.2
 
-//    vector<Rect>::iterator i;
-//    for (i = plates.begin(); i != plates.end(); ++i) {
-//        i->x = i->x * image_size.width / resized_image_size.width;
-//        i->y = i->y * image_size.height / resized_image_size.height;
-//        i->width = i->width * image_size.width / resized_image_size.width;
-//        i->height = i->height * image_size.height / resized_image_size.height;
-//    }
     return plates;
 }
