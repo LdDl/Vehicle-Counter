@@ -28,9 +28,9 @@ You need to create configuration JSON-file with next fields:
   
 	"line_length": 5000, //line of length
   
-	"scale_factor": 3, //scale factor
+	"scale_factor": 3, //scale factor (it is better to decrease image size for faster computations)
   
-	"direction": true //if it is true -> count vehicles moving TO us; false -> count vehicles moving FROM us
+	"direction": true //if it is true -> count vehicles moving ON us; false -> count vehicles moving FROM us
 }
 ```
 Then you can start program executing command:
