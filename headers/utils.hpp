@@ -61,6 +61,7 @@ class InitialParameters {
         bool direction = true; //true - ON us, false - FROM us
         CascadeClassifier cascade_plates;
         Point crossingLine[2];
+        bool imshow_active = false;
         void SetParams(const char *path);
 };
 

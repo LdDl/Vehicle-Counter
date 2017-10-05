@@ -21,7 +21,7 @@ InitialParameters::InitialParameters(const char *path) {
         this->scale_factor = j["scale_factor"];
     }
     this->direction = j["direction"];
-
+    this->imshow_active = j["imshow_active"];
     if (this->detector_type == "haar_cascade") {
         string cascade_path = j["cascade_path"];
         if (!this->cascade_plates.load(cascade_path)) {
@@ -51,7 +51,7 @@ void InitialParameters::SetParams(const char *path) {
         this->scale_factor = j["scale_factor"];
     }
     this->direction = j["direction"];
-
+    this->imshow_active = j["imshow_active"];
     if (this->detector_type == "haar_cascade") {
         string cascade_path = j["cascade_path"];
         if (!this->cascade_plates.load(cascade_path)) {

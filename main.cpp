@@ -1,4 +1,8 @@
 #include <iostream>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
+
 #include "headers/blobie.hpp"
 
 #include "headers/fifo_buffer.hpp"
@@ -24,6 +28,7 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
 void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParameters &mp);
 
 int main(int argc, char* argv[]) {
+
     InitialParameters mainParameters;
     if (argc > 1) {
         cout << "Using configuration file: " << argv[1] << endl;
@@ -95,11 +100,11 @@ void Processing(InitialParameters &mp) {
         if (buff.Pop(frame) == false) {
             continue;
         }
-        if (mp.detector_type == "fmog2") {
+        if (mp.detector_type == "mog2") {
             ProcessingDataMOG2(frame, blobies, mp);
         } else if (mp.detector_type == "haar_cascade") {
             ProcessingDataHaar(frame, blobies, mp);
-        } else if (mp.detector_type == "fknn") {
+        } else if (mp.detector_type == "knn") {
             ProcessingDataKNN(frame, blobies, mp);
         } else {
             //...handle somehow
@@ -108,17 +113,16 @@ void Processing(InitialParameters &mp) {
     size_t remaining = buff.Size();
     cout << endl << "Processing thread >> Flushing buffer: remaining " << remaining << " frames..." << endl;
     while (buff.Pop(frame)) {
-        if (mp.detector_type == "fmog2") {
-            //ProcessingDataMOG2(frame);
+        if (mp.detector_type == "mog2") {
             ProcessingDataMOG2(frame, blobies, mp);
         } else if (mp.detector_type == "haar_cascade") {
             ProcessingDataHaar(frame, blobies, mp);
-        } else if (mp.detector_type == "fknn") {
+        } else if (mp.detector_type == "knn") {
             ProcessingDataKNN(frame, blobies, mp);
         } else {
             //...handle somehow
         }
-        cout << "remaining: " << remaining-- << endl;
+        cout << "remaining amount of frames: " << remaining-- << endl;
     }
     cout << "Processing thread: done!" << endl;
 }
@@ -149,7 +153,11 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
                 int rwidth = blob.currentBoundingRect.width * mp.scale_factor;
                 int rheight = blob.currentBoundingRect.height * mp.scale_factor;
                 Rect objectCrop(rx, ry, rwidth, rheight);
-                imshow("plate for id: " + to_string(&blob - &blobies[0]), fdata.image_truesize(objectCrop));
+                if (mp.imshow_active) {
+                    imshow("plate for id: " + to_string(&blob - &blobies[0]), fdata.image_truesize(objectCrop));
+                } else {
+                    //no imshow
+                }
                 line(imgCopy, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 255, 0), 15);
             } else {
                 //nothing here
@@ -158,10 +166,20 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
         }
         blnFirstFrame = false;
     }
-    imshow("src", imgCopy);
+
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+    auto text = oss.str();
+    putText(imgCopy, text, Point(50, 50), cv::FONT_HERSHEY_SCRIPT_SIMPLEX, 2, Scalar(0, 255, 255), 3, 8);
+    if (mp.imshow_active) {
+        imshow("src", imgCopy);
+    } else {
+        //no imshow
+    }
     waitKey(1);
 }
-
 
 void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParameters &mp) {
     vector<blobie> blobies_currentFrame;
@@ -174,18 +192,23 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
     std::vector<std::vector<cv::Point> > contours;
     findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     drawContours(frame, contours, -1, cv::Scalar(0,0,255), 2);
-
     medianBlur(fgMaskKNN, fgMaskKNN, 5);
-    imshow("gauss blur", fgMaskKNN);
+    if (mp.imshow_active) {
+        imshow("gauss blur", fgMaskKNN);
+    } else {
+        // no imshow
+    }
     morphologyEx(fgMaskKNN, fgMaskKNN, MORPH_CLOSE, getStructuringElement(MORPH_RECT, Size(5, 5)));
     morphologyEx(fgMaskKNN, fgMaskKNN, MORPH_OPEN, getStructuringElement(MORPH_RECT, Size(5, 5)));
-    imshow("morphology", fgMaskKNN);
-
+    if (mp.imshow_active) {
+        imshow("morphology", fgMaskKNN);
+    } else {
+        //no imshow
+    }
     vector<vector<Point> > convexHulls(contours.size());
     for (unsigned int i = 0; i < contours.size(); i++) {
         convexHull(contours[i], convexHulls[i]);
     }
-
     for (auto &convexHull : convexHulls) {
         blobie possible_blobie(convexHull);
         if (possible_blobie.currentBoundingRect.width > 30 &&
@@ -196,7 +219,6 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
             blobies_currentFrame.push_back(possible_blobie);
         }
     }
-
     if (blnFirstFrame == true) {
         for (auto &currentFrameBlob : blobies_currentFrame) {
             blobies.push_back(currentFrameBlob);
@@ -204,7 +226,6 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
     } else {
         matchCurrentFrameBlobsToExistingBlobs(blobies, blobies_currentFrame);
     }
-
     line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 0, 255), 3);
     for (auto &blob : blobies) {
         if (blob.isCrossedTheLine(mp.crossingLine[0].y, carCounter, mp.direction)) {
@@ -215,11 +236,24 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
         }
       blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
-
     blobies_currentFrame.clear();
     blnFirstFrame = false;
-    imshow("fgMaskKNN", fgMaskKNN);
-    imshow("frame", frame);
+    if (mp.imshow_active) {
+        imshow("MaskKNN", fgMaskKNN);
+    } else {
+        //no imshow
+    }
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+    auto text = oss.str();
+    putText(frame, text, Point(50, 50), cv::FONT_HERSHEY_SCRIPT_SIMPLEX, 2, Scalar(0, 255, 255), 3, 8);
+    if (mp.imshow_active) {
+        imshow("frame", frame);
+    } else {
+        //no imshow
+    }
     waitKey(1);
 }
 
@@ -234,18 +268,23 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
     std::vector<PointsVector> contours;
     findContours(foreground, contours,  CV_RETR_EXTERNAL, CV_CHAIN_APPROX_NONE);
     drawContours(frame, contours, -1, Scalar(0,0,255), 2);
-
     medianBlur(fgMaskMOG2, fgMaskMOG2, 5);
-    imshow("gauss blur", fgMaskMOG2);
+    if (mp.imshow_active) {
+        imshow("gauss blur", fgMaskMOG2);
+    } else {
+        //no imshow
+    }
     morphologyEx(fgMaskMOG2, fgMaskMOG2, MORPH_CLOSE, getStructuringElement(MORPH_RECT, Size(5, 5)));
     morphologyEx(fgMaskMOG2, fgMaskMOG2, MORPH_OPEN, getStructuringElement(MORPH_RECT, Size(5, 5)));
-    imshow("morphology", fgMaskMOG2);
-
+    if (mp.imshow_active) {
+        imshow("morphology", fgMaskMOG2);
+    } else {
+        //no imshow
+    }
     vector<vector<Point> > convexHulls(contours.size());
     for (unsigned int i = 0; i < contours.size(); i++) {
         convexHull(contours[i], convexHulls[i]);
     }
-
     for (auto &convexHull : convexHulls) {
         blobie possible_blobie(convexHull);
         if (possible_blobie.currentBoundingRect.width > 30 &&
@@ -256,7 +295,6 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
             blobies_currentFrame.push_back(possible_blobie);
         }
     }
-
     if (blnFirstFrame == true) {
         for (auto &currentFrameBlob : blobies_currentFrame) {
             blobies.push_back(currentFrameBlob);
@@ -264,7 +302,6 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
     } else {
         matchCurrentFrameBlobsToExistingBlobs(blobies, blobies_currentFrame);
     }
-
     line(frame, mp.crossingLine[0], mp.crossingLine[1], Scalar(0, 0, 255), 3);
     for (auto &blob : blobies) {
         if (blob.isCrossedTheLine(mp.crossingLine[0].y, carCounter, mp.direction)) {
@@ -275,11 +312,23 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
         }
         blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
-
     blobies_currentFrame.clear();
     blnFirstFrame = false;
-
-    imshow("fgMaskMOG2", fgMaskMOG2);
-    imshow("frame", frame);
+    if (mp.imshow_active) {
+        imshow("MaskMOG2", fgMaskMOG2);
+    } else {
+        //no imshow
+    }
+    auto t = std::time(nullptr);
+    auto tm = *std::localtime(&t);
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%d-%m-%Y %H-%M-%S");
+    auto text = oss.str();
+    putText(frame, text, Point(50, 50), cv::FONT_HERSHEY_SCRIPT_SIMPLEX, 2, Scalar(0, 255, 255), 3, 8);
+    if (mp.imshow_active) {
+        imshow("Frame", frame);
+    } else {
+        //no imshow
+    }
     waitKey(1);
 }
