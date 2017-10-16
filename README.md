@@ -26,7 +26,7 @@ You need to create configuration JSON-file with next fields:
 		"y": 350
 	},
   
-	"line_length": 5000, //line of length
+	"line_length": 5000, //length of line
   
 	"scale_factor": 3, //scale factor (it is better to decrease image size for faster computations)
   
