@@ -59,4 +59,4 @@ foreground.setTo(0, foreground == 127);
  5. Test programm on several single board computers.
  
 ### P.S.
-I'm stil working on this. Will be glad to read any ideas how to improve the project.
+Stil working on this.
