@@ -57,11 +57,17 @@ class InitialParameters {
         InitialParameters(const char *path);
         string detector_type = "";
         string videoSource = "";
+        int img_width = 1;
+        int img_height = 1;
+        int scaled_width = 1;
+        int scaled_height = 1;
         int scale_factor = 1;
+        int angle_rotation = 0; // Rotate detected objects of interests for defiened angle.
         bool direction = true; //true - ON us, false - FROM us
         CascadeClassifier cascade_plates;
         Point crossingLine[2];
         bool imshow_active = false;
+        bool blnFirstFrame = true;
         void SetParams(const char *path);
 };
 

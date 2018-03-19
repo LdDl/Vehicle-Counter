@@ -13,15 +13,13 @@ InitialParameters::InitialParameters(const char *path) {
     this->crossingLine[1].x = j["line_length"];
     this->crossingLine[1].x += this->crossingLine[0].x;
     this->crossingLine[1].y = this->crossingLine[0].y;
-    this->scale_factor = j["scale_factor"];
-    if (this->scale_factor <= 0) {
-        this->scale_factor = 1;
-        cout << "Bad scale factor, using default value: 1" << endl;
-    } else {
-        this->scale_factor = j["scale_factor"];
-    }
+    this->img_width = j["image_size"]["width"];
+    this->img_height = j["image_size"]["height"];
+    this->scaled_width = j["scaled_size"]["width"];
+    this->scaled_height = j["scaled_size"]["height"];
+    this->scale_factor = this->img_width / this->scaled_width;
     this->direction = j["direction"];
-    this->imshow_active = j["imshow_active"];
+//    this->imshow_active = j["imshow_active"];
     if (this->detector_type == "haar_cascade") {
         string cascade_path = j["cascade_path"];
         if (!this->cascade_plates.load(cascade_path)) {
@@ -30,6 +28,7 @@ InitialParameters::InitialParameters(const char *path) {
     } else if (this->detector_type == "fmog2") {
 
     }
+    this->angle_rotation = j["angle_rotation"];
 }
 
 void InitialParameters::SetParams(const char *path) {
@@ -43,13 +42,11 @@ void InitialParameters::SetParams(const char *path) {
     this->crossingLine[1].x = j["line_length"];
     this->crossingLine[1].x += this->crossingLine[0].x;
     this->crossingLine[1].y = this->crossingLine[0].y;
-    this->scale_factor = j["scale_factor"];
-    if (this->scale_factor <= 0) {
-        this->scale_factor = 1;
-        cout << "Bad scale factor, using default value: 1" << endl;
-    } else {
-        this->scale_factor = j["scale_factor"];
-    }
+    this->img_width = j["image_size"]["width"];
+    this->img_height = j["image_size"]["height"];
+    this->scaled_width = j["scaled_size"]["width"];
+    this->scaled_height = j["scaled_size"]["height"];
+    this->scale_factor = this->img_width / this->scaled_width;
     this->direction = j["direction"];
     this->imshow_active = j["imshow_active"];
     if (this->detector_type == "haar_cascade") {
@@ -60,6 +57,7 @@ void InitialParameters::SetParams(const char *path) {
     } else if (this->detector_type == "fmog2") {
 
     }
+    this->angle_rotation = j["angle_rotation"];
 }
 
 double distanceBetweenPoints(Point point1, Point point2) {
@@ -77,7 +75,6 @@ vector<Rect> detectRegionsOfInterest(Mat &frame, CascadeClassifier &cascade) {
     resize(frameClone, frameClone, resized_image_size);
     cvtColor(frameClone, gray_img, CV_BGR2GRAY);
     equalizeHist(gray_img, eq_img);
-    cascade.detectMultiScale(eq_img, plates, 1.18, 3, 0, Size(15, 15)); //scale 1.2
-
+    cascade.detectMultiScale(eq_img, plates, 1.8, 3, 0, Size(15, 15)); //scale 1.2
     return plates;
 }

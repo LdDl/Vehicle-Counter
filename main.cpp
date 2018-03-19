@@ -16,7 +16,6 @@ Mat fgMaskMOG2;
 Mat fgMaskKNN;
 Ptr<BackgroundSubtractorMOG2> pMOG2 = createBackgroundSubtractorMOG2(500, 36.0, true);
 Ptr<BackgroundSubtractor> pKNN = createBackgroundSubtractorKNN(500, 36.0, true);
-bool blnFirstFrame = true;
 int carCounter = 0;
 
 //Thread functions
@@ -30,14 +29,15 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
 int main(int argc, char* argv[]) {
 
     InitialParameters mainParameters;
-    if (argc > 1) {
-        cout << "Using configuration file: " << argv[1] << endl;
-        mainParameters.SetParams(argv[1]);
-    } else {
-        cout << "No configuration file has been provided!" << endl;
-        return 0;
-    }
+//    if (argc > 1) {
+//        cout << "Using configuration file: " << argv[1] << endl;
+//        mainParameters.SetParams(argv[1]);
+//    } else {
+//        cout << "No configuration file has been provided!" << endl;
+//        return 0;
+//    }
 
+    mainParameters.SetParams("D:/hp/Documents/QtProjects/build-vcounter-Desktop_Qt_5_8_0_MSVC2015_64bit-Release/release/initial_params.json");
     cout << "Starting...\n";
 
     grabbing.store(true);
@@ -138,7 +138,7 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
             blobie possibleBlob(myROI);
             currentFrameBlobs.push_back(possibleBlob);
         }
-        if (blnFirstFrame == true) {
+        if (mp.blnFirstFrame == true) {
             for (auto &currentFrameBlob : currentFrameBlobs) {
                 blobies.push_back(currentFrameBlob);
             }
@@ -154,7 +154,16 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
                 int rheight = blob.currentBoundingRect.height * mp.scale_factor;
                 Rect objectCrop(rx, ry, rwidth, rheight);
                 if (mp.imshow_active) {
-                    imshow("plate for id: " + to_string(&blob - &blobies[0]), fdata.image_truesize(objectCrop));
+                    double angle = mp.angle_rotation;
+                    Mat croppedImg = fdata.image_truesize(objectCrop);
+                    cv::Point2f center(croppedImg.cols/2.0, croppedImg.rows/2.0);
+                    cv::Mat rot = cv::getRotationMatrix2D(center, angle, 1.0);
+                    cv::Rect bbox = cv::RotatedRect(center, croppedImg.size(), angle).boundingRect();
+                    rot.at<double>(0,2) += bbox.width/2.0 - center.x;
+                    rot.at<double>(1,2) += bbox.height/2.0 - center.y;
+                    cv::Mat dst;
+                    cv::warpAffine(croppedImg, dst, rot, bbox.size());
+                    imshow("plate for id: " + to_string(&blob - &blobies[0]), dst);
                 } else {
                     //no imshow
                 }
@@ -164,7 +173,7 @@ void ProcessingDataHaar(FrameData &fdata, vector<blobie> &blobies, InitialParame
             }
             blob.drawTrack(imgCopy, to_string(&blob - &blobies[0]));
         }
-        blnFirstFrame = false;
+        mp.blnFirstFrame = false;
     }
 
     auto t = std::time(nullptr);
@@ -219,7 +228,7 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
             blobies_currentFrame.push_back(possible_blobie);
         }
     }
-    if (blnFirstFrame == true) {
+    if (mp.blnFirstFrame == true) {
         for (auto &currentFrameBlob : blobies_currentFrame) {
             blobies.push_back(currentFrameBlob);
         }
@@ -237,7 +246,7 @@ void ProcessingDataKNN(FrameData &fdata, vector<blobie> &blobies, InitialParamet
       blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
     blobies_currentFrame.clear();
-    blnFirstFrame = false;
+    mp.blnFirstFrame = false;
     if (mp.imshow_active) {
         imshow("MaskKNN", fgMaskKNN);
     } else {
@@ -295,7 +304,7 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
             blobies_currentFrame.push_back(possible_blobie);
         }
     }
-    if (blnFirstFrame == true) {
+    if (mp.blnFirstFrame == true) {
         for (auto &currentFrameBlob : blobies_currentFrame) {
             blobies.push_back(currentFrameBlob);
         }
@@ -313,7 +322,7 @@ void ProcessingDataMOG2(FrameData &fdata, vector<blobie> &blobies, InitialParame
         blob.drawTrack(frame, to_string(&blob - &blobies[0]));
     }
     blobies_currentFrame.clear();
-    blnFirstFrame = false;
+    mp.blnFirstFrame = false;
     if (mp.imshow_active) {
         imshow("MaskMOG2", fgMaskMOG2);
     } else {
